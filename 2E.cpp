@@ -146,7 +146,7 @@ int main() {
     scanf("%lld %lld" , &N , &K );
     for ( ll i = 0 ; i < N ; ++i ) {
         scanf("%lld", &value );
-        heap.insert(value,key);
+        heap.insert(value,key);//Все подряд?
         ++key;
     }
     for (ll i = 0 ; i < K ; ++i ) {
