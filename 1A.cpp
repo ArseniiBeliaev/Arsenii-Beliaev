@@ -23,6 +23,7 @@ void push(ll x){
     ++size;
     cout << "ok" << endl;
 }
+
 void back() {
     int bac;
     if (stc==nullptr) {
@@ -33,6 +34,7 @@ void back() {
     cout << bac << endl ;
     }
 }
+
 void pop () {
     if (stc==nullptr) {
         cout << "error" << endl;
@@ -43,6 +45,7 @@ void pop () {
     size = size - 1;
     }
 }
+
 void clear () {
     stc=nullptr;
     size=0;
