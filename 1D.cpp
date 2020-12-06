@@ -9,7 +9,7 @@ struct buffer {
         buffer_right.push_front(buffer_left.back());
         buffer_left.pop_back();
         }
-        
+        // И в этот момент ты обязательно делаешь две лишнии операции, потому что условия противоречят друг другу. Почему бы в верхнее не написать сразу +2 
         while (buffer_left.size() < buffer_right.size()) {
         buffer_left.push_back(buffer_right.front());
         buffer_right.pop_front();
@@ -50,7 +50,6 @@ int main() {
     
     buffer goblins;
     
-    
     cin >> requestCount;
     
     while(requestCount --> 0) {
@@ -71,8 +70,6 @@ int main() {
         }
         
     }
-    
-    
     
     return 0;
 }
