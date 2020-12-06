@@ -1,12 +1,14 @@
 
 #include <iostream>
 #include <fstream>
+
 long long int answer = 0;
+
 void Merge_sort (long long int * array , long long int left , long long int right ) {
     long long int middle = (left + right)/2 ;
     long long int uk_1 = left ;
     long long int uk_2 = middle + 1 ;
-    long long int *mrg = new long long int [100000];
+    long long int *mrg = new long long int [100000];//Эту вещь можно создать один раз в более общей функции и потом несколько раз переиспользовать
     for( long long int j=left; j<=right; j++) {
         if ((uk_1 <= middle) && (( uk_2 > right ) || (array[uk_1] < array[uk_2]))) {
             mrg[j]=array[uk_1];
