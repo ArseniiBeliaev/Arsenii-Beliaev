@@ -7,7 +7,9 @@ typedef long long ll;
 long long findK(long long *array , long long array_size, long long  k) {
     ll p = array[array_size / 2];
     ll *left = new ll[array_size];
-    ll *right = new ll[array_size];
+    ll *right = new ll[array_size];// Во первых для алгоритма pivot не требуется создавать новые массивы, это дорого по памяти.
+    //Во вторых это вдвойне дорого, так как ты их создаёшь заного при каждом вызове функции поиска
+    //В третьих это чертовски дорого, так как ты их не очищаешь после использования delete'ом
     ll left_size = 0, right_size = 0;
     for (ll i = 0 ; i < array_size; ++i) {
         if (array[i] < p) {
