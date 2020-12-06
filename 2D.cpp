@@ -6,7 +6,7 @@ typedef long long ll;
 
 class Heap {
     std::vector <std::pair<long long,long long>> heapStorage;
-    ll heapStorage_key[1000000];
+    ll heapStorage_key[1'000'000];
 
     int heapUp( ll indexDown ) {
         if ( indexDown == 0 ) return 0;
