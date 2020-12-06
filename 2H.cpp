@@ -7,17 +7,21 @@ int main()
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     cout.tie(0);
+    
     ll size ;
     std::cin >> size;
+    
     ll array[size];
     ll array2[size];
     ll index[10];
     ll ind;
     ll temp;
     ll p = 1;
+    
     for ( ll i = 0 ; i < size ; ++i ) {
         std::cin >> array[i];
     }
+    
     for (ll i = 0 ; i < 20 ; ++i ) {
 
         for ( ll z = 0 ; z < 10 ; ++z ) {
