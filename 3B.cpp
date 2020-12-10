@@ -6,7 +6,7 @@ void acceleeration() {
     std::cout.tie(0);
 }
 
-struct Node {
+struct Node {// Так же как и в предыдущей задаче, можно было бы запрятать Node в класс splayTree
     Node() = default;
     Node* parent = nullptr ;
     Node* left = nullptr ;
@@ -143,10 +143,11 @@ class splayTree {
         if (nodeChild->inf == 'l') {
             (nodeChild->parent)->left=nodeChild;
         }
-        if (nodeChild->inf == 'r') {
+        if (nodeChild->inf == 'r') {//А такой случай возможен??
             (nodeChild->parent)->right=nodeChild;
         }
         // Здесь изменение суммы в дереве ( магия ) (Попросите скинуть фото-инструкцию и все станет ясно :) )
+        // Лучше бы ссылку оставил на фото инструкцию. Но и так понятно
         long long blue = nodePar->key;
         long long red = nodeChild->key;
         long long A = 0;
@@ -177,7 +178,7 @@ class splayTree {
         nodePar->inf='l';
         nodeChild->parent = nodePar->parent;
         nodePar->parent = nodeChild;
-        if (nodeChild->inf =='l') {
+        if (nodeChild->inf =='l') {// аналогично
             (nodeChild->parent)->left = nodeChild;
         }
         if (nodeChild->inf == 'r') {
@@ -203,7 +204,7 @@ class splayTree {
         //=======================================================================================================
     }
 
-    Node* findMin(Node* node ) {
+    Node* findMin(Node* node ) {//!!! после поиска элемента дерево должно его выводить в корень, иначе теряется смысл. Доделать
         if(node->left != nullptr) {
             return findMin(node->left);
         }
@@ -211,11 +212,11 @@ class splayTree {
     }
 
     void del(long long value) {
-        add(value);
+        add(value);//Это вместо splay? А если такого элемента реально не было??
         Node* node_left  = root->left;
         Node* node_right = root->right;
         if (node_left!= nullptr) {
-            (node_left)->parent = nullptr;
+            (node_left)->parent = nullptr; //!!! просто присваивания nullptr не хватит, нужно освободить память по указателю, а это утечка
             (node_left)->inf = '0';
         }
         if (node_right!= nullptr) {
@@ -270,7 +271,7 @@ class splayTree {
             if (node->key == value ) {
                 return true;
             }
-        }
+        }// и вновь по хорошему после поиска элемента нужно помочь ему всплыть наверх
         else return false;
     }
 
@@ -316,8 +317,8 @@ public:
     void dlt(long long value) {
         del(value);
     }
-    long long inter(long long left , long long right) {
-        return  interval(left,right);
+    long long inter(long long left , long long right) {// print_interval_sum
+        return  interval(left,right); // find_interval_sum
     }
 
  };
@@ -347,7 +348,7 @@ int main() {
         if (command_new == '+') {
             std::cin>>value_1;
             if (command_old == '?') {
-                value_1 = (value_1 + result ) % 1000000000;
+                value_1 = (value_1 + result ) % 1'000'000'000;// 1e9
                 x.add(value_1);
             }
             else {
