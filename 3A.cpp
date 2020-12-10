@@ -1,15 +1,18 @@
 #include <iostream>
+
 long long const INF = 1e18;
 void acceleeration() {
     std::ios_base::sync_with_stdio(0);
     std::cin.tie(0);
     std::cout.tie(0);
 }
-struct Node {
+
+struct Node {// По хорошему данной структурой не будут пользоваться с наружи, так что её следовало бы спрятать под 'капотом' BiBaTree
     Node* left;
     Node* right;
     long long key;
     long long height;
+    
     Node ( long long x ) {
         key = x;
         left = NULL;
@@ -17,11 +20,13 @@ struct Node {
         height = 1;
     }
 };
+
 class BiBaTree {
     Node* root = NULL ;
  
     long long fixHeight(Node* node) {
- 
+        //Не очень эффективно делать 4 проверки с повторяющимися условиями. Можно просто взять левую высоту или 0, а потом максимум с правой или так оставить
+        // А в конце уже добавить 1, хотя не очень понял, почему пустая ветка вдруг имеет высоту 1 а не 0
         if (( node->right == NULL ) && ( node->left == NULL )) {
             return 1;
         }
@@ -35,7 +40,8 @@ class BiBaTree {
             return std::max( (node->left)->height,(node->right)->height ) + 1;
         }
     }
-    Node* rotationRight(Node* node) {
+    
+    Node* rotationRight(Node* node) {// rotate right
         Node* swp = node->left;
         node->left = swp->right;
         swp->right = node;
@@ -43,7 +49,8 @@ class BiBaTree {
         swp->height = fixHeight(swp);
         return swp;
     }
-    Node* rotationLeft(Node* node) {
+    
+    Node* rotationLeft(Node* node) {// rotate left
         Node* swp = node->right;
         node->right = swp->left;
         swp->left = node;
@@ -51,6 +58,7 @@ class BiBaTree {
         swp->height = fixHeight(swp);
         return swp;
     }
+    
     Node* min(Node* node) {
         if (node->left != NULL ) {
             min(node->left);
@@ -59,16 +67,19 @@ class BiBaTree {
             return node;
         }
     }
+    
     Node* delMin(Node* node) {
         if ( node->left == NULL ) {
             return node->right;
         }
         else {
             node->left =  delMin(node->left);
+            //здесь утечка памяти, тебе нужно явно удалить созданую когда-то ноду, которая раньше хранилась в left при возврате right
         }
         return balance(node);
     }
-    long long balanceDiff (Node* node) {
+    
+    long long balanceDiff (Node* node) {//Аналогично
         long long  rez;
         if (( node->left == NULL ) && (node->right == NULL )) {
             rez = 0;
@@ -84,6 +95,7 @@ class BiBaTree {
         }
         return rez;
     }
+    
     Node* balance(Node* node) {
         node->height = fixHeight(node);
         long long diff = balanceDiff(node);
@@ -101,6 +113,7 @@ class BiBaTree {
         }
         return node;
     }
+    
     Node* insert(long  long value , Node* node) {
  
         if ( node == NULL ) {
@@ -115,8 +128,10 @@ class BiBaTree {
                 node->left = insert(value , node->left );
             }
         }
+        // Комментарий))??? Вау
         return balance(node); // здесь вызовем баланс дерево , чтобы все было
     }
+    
     Node* del(long long value , Node* node ) {
         if ( node!=NULL ) {
             if (value > node->key ) {
@@ -144,6 +159,7 @@ class BiBaTree {
         }
         return balance(node);
     }
+    
     void print(Node* node) {
         if (node != NULL ) {
             print(node->left);
@@ -249,4 +265,3 @@ int main() {
  
     return 0;
 }
-
