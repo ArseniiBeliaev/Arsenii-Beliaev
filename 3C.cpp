@@ -20,6 +20,7 @@ struct Node {
         height = 1;
     }
 };
+
 class BiBaTree {
     Node* root = NULL ;
 
