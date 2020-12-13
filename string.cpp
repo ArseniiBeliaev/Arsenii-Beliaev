@@ -1,9 +1,11 @@
 #include <iostream>
 #include <cstring>
+
 class String {
     size_t size = 0;
     size_t capacity = 0;
     char* str = nullptr;
+    
     void memoryCorrect() {
         if (capacity==0) {
             str = new char[2];
@@ -30,7 +32,7 @@ public:
     String() = default;
 
     String (const char Char) {
-        size =1;
+        size = 1;
         str = new char[2];
         str[0]=Char;
         capacity=2;
@@ -46,7 +48,7 @@ public:
 
     String& operator=(String line) {
         swap(line);
-        return (*this);
+        return *this;
     }
 
     void swap(String& line) {
@@ -55,13 +57,14 @@ public:
         std::swap(capacity,line.capacity);
     }
 
-    String (const String& line): String(line.size,'\0') {
+    String (const String& line): String(line.size,'\0') {// два memcpy в одну память, не очень эффективно но ладно
         memcpy(str,line.str,line.size);
     }
 
-    friend  bool operator==(const String& left , const String& right);
+    friend bool operator==(const String& left , const String& right);// не очень вижу смысл такого оператора, вряд ли кто-то будет писать "abc" == string,
+    // всегда наоборот пишут
 
-    // Конструктор не забыть написать
+    // Конструктор не забыть написать Update: видимо забыл))
 
     size_t length() const {
         return size;
@@ -107,7 +110,7 @@ public:
 
     String& operator+=(const String line) {
         for (size_t i = 0; i<line.size; ++i) {
-            push_back(line.str[i]);
+            push_back(line.str[i]);// эффективно... Сделай через копирование и расширение сразу
         }
         return (*this);
     }
@@ -119,7 +122,7 @@ public:
 
     String& operator+=(const char* line) {
         for (size_t i=0; i<strlen(line); ++i) {
-            push_back(line[i]);
+            push_back(line[i]);// аналогично
         }
         return (*this);
     }
@@ -174,7 +177,7 @@ public:
                     }
                     else result=false;
                 }
-                if (result==true) {
+                if (result==true) {// А почему бы просто с конца не проводить сканирование?
                     if (max == -1) {
                         max=i;
                     }
@@ -193,7 +196,7 @@ public:
     }
     
     String substr(const size_t start , const size_t count) const  {
-        char* copy_CS;
+        char* copy_CS;// Лучше сразу создать string, черем 2 раза копировать
         copy_CS = new char[count];
         for (size_t i = start ; i < start + count ; ++i) {
             copy_CS[i-start] = str[i];
@@ -226,7 +229,7 @@ bool operator==(const String& left, const String& right) {
         return result;
     }
 }
-
+// Зачем тебе столько одинаковых операторов +, если компилятор всё равно может автоматически привести тип к String, если есть нужный конструктор?
 String operator+ ( const String& left , const String& right ) {
     String copy = left;
     copy+=right;
@@ -264,7 +267,7 @@ std::ostream& operator << (std::ostream& ou , const String line) {
 
 std::istream& operator >> (std::istream& in , String& line) {
     line.clear();
-    while (true) {
+    while (true) {// лучше писать while(in.get(symbol)), тогда сразу защитишся от некорректного ввода и EOF
         long long symbol;
         symbol = in.get();
         if ( symbol==-1 ) {
