@@ -1,9 +1,9 @@
 #include <iostream>
 #include <string>
 using namespace std;
- 
+
 typedef long long ll;
- 
+
 struct node {
     int val;
     node *prev;
@@ -12,72 +12,86 @@ struct node {
         prev = nullptr;
     }
 };
- 
-node *stc = nullptr;
-int size = 0;
- 
-void push(ll x){
-    node *v = new node(x);
-    v -> prev = stc;
-    stc = v;
-    ++size;
-    cout << "ok" << endl;
-}
 
-void back() {
-    int bac;
-    if (stc==nullptr) {
-        cout << "error" << endl;
-    }
-    else {
-    bac = stc -> val;
-    cout << bac << endl ;
-    }
-}
+class myStack {
+public:
 
-void pop () {
-    if (stc==nullptr) {
-        cout << "error" << endl;
-    }
-    else {
-    cout << stc -> val << endl;
-    stc = stc -> prev;
-    size = size - 1;
-    }
-}
+    node *stc = nullptr;
+    int size = 0;
 
-void clear () {
-    stc=nullptr;
-    size=0;
-}
- 
- 
+    myStack() {
+
+    }
+
+    void push(ll x) {
+        node *v = new node(x);
+        v->prev = stc;
+        stc = v;
+        ++size;
+        cout << "ok" << endl;
+    }
+
+    void back() {
+        int bac;
+        if (stc == nullptr) {
+            cout << "error" << endl;
+        } else {
+            bac = stc->val;
+            cout << bac << endl;
+        }
+    }
+
+    void pop() {
+        if (stc == nullptr) {
+            cout << "error" << endl;
+        } else {
+            cout << stc->val << endl;
+
+            node* buf = stc->prev;
+            delete stc;
+            stc = buf;
+            size = size - 1;
+        }
+    }
+
+    void clear() {
+        while (stc != nullptr) {
+            node* buf = stc->prev;
+            delete stc;
+            stc = buf;
+        }
+
+        size = 0;
+    }
+};
+
 int main(){
     bool b = true;
     string cmd;
     int x;
+    myStack bob;
     while (b) {
         cin >> cmd ;
         if ( cmd == "exit"){
             cout << "bye" << endl;
             b = false;
-            
+
         }
         if ( cmd == "back" ){
-            back();
+            bob.back();
         }
         if ( cmd == "push"){
             cin >> x ;
-            push(x);
+            bob.push(x);
         }
         if ( cmd == "pop")
-            pop();
+            bob.pop();
         if ( cmd == "clear" ){
-            clear();
-            cout << "ok" << endl; 
+            bob.clear();
+            cout << "ok" << endl;
         }
         if ( cmd == "size" ){
-            cout << size << endl ; 
+            cout << bob.size << endl ;
         }
     }
     return 0;
