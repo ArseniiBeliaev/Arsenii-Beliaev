@@ -4,30 +4,34 @@ typedef long long ll;
 
 
 
+int partition(int l,int r,long long* array) {
+    int mid_val = array[(l+r)/2];
+    while (l <= r) {
+       while (array[l] < mid_val) ++l;
+       while (array[r] > mid_val) --r;
+       if (l >= r) break;
+       std::swap(array[l],array[r]);
+       ++l;
+       --r;
+    }
+    return l;
+}
+
 long long findK(long long *array , long long array_size, long long  k) {
-    ll p = array[array_size / 2];
-    ll *left = new ll[array_size];
-    ll *right = new ll[array_size];// Во первых для алгоритма pivot не требуется создавать новые массивы, это дорого по памяти.
-    //Во вторых это вдвойне дорого, так как ты их создаёшь заного при каждом вызове функции поиска
-    //В третьих это чертовски дорого, так как ты их не очищаешь после использования delete'ом
-    ll left_size = 0, right_size = 0;
-    for (ll i = 0 ; i < array_size; ++i) {
-        if (array[i] < p) {
-            left[left_size] = array[i];
-            left_size++;
-        } else if (array[i] > p) {
-            right[right_size] = array[i];
-            right_size++;
+    int left = 0;
+    int right = array_size-1;
+    while (true) {
+        int mid = partition(left,right,array);
+        if (mid==k) {
+            return array[k];
+        }
+        if (mid < k) {
+            left = mid+1;
+        }
+        else {
+            right = mid-1;
         }
     }
-    ll equal = array_size - (left_size + right_size);
-    if (left_size <= k && k < left_size + equal)
-        return p;
-    if (k < left_size)
-         return findK(left, left_size, k);
-    else 
-         return findK(right, right_size, k - (left_size + equal));
-    
 }
 int main() {
     ll size;
