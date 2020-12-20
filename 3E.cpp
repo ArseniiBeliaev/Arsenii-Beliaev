@@ -10,7 +10,8 @@ class SetOfSet {
     long long lot_lot;
 public:
 
-    SetOfSet(long long lot_lot):lot_lot(lot_lot) { // Так проще уудалять потом и ошибок не получать
+    SetOfSet(long long lot_lot):lot_lot(lot_lot) {// Всё равно все создаёшь сразу... по хорошему как раз в add было бы эффективнее создавать при обращении
+        // Ну и проверять, что множество ссуществует в остальных функциях
         for ( long long i = 0 ; i < lot_lot+1 ; ++i  ) {
             global_set[i] = new std::set <long long>;
         }
