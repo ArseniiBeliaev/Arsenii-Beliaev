@@ -1,8 +1,8 @@
 #include <iostream>
 #include <cstdio>
+
+
 typedef long long ll;
-
-
 
 int partition(int l,int r,long long* array) {
     int mid_val = array[(l+r)/2];
