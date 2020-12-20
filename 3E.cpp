@@ -7,13 +7,14 @@
 class SetOfSet {
     std::set <long long>* global_set[100000];
     std::map <long long ,std::set <long long> > array;
+    long long lot_lot;
 public:
 
-    SetOfSet(long long lot_lot) {// А зачем все сразу создавать, создавай по мере обращения к элементам, так и быстрее
-        // и память зря занимать не будешь
+    SetOfSet(long long lot_lot):lot_lot(lot_lot) { // Так проще уудалять потом и ошибок не получать
         for ( long long i = 0 ; i < lot_lot+1 ; ++i  ) {
-            global_set[i] = new std::set <long long>;// Без деструктора, плохо
+            global_set[i] = new std::set <long long>;
         }
+
     }
 
     void add(long long number , long long value) {
@@ -39,11 +40,13 @@ public:
         std::set <long long> :: iterator it = (*global_set[number]).begin();
         while ( it != (*global_set[number]).end() ) {
             (array[*it]).erase(number);
-            (*global_set[number]).erase(*it); // Зачем, можно потом сразу отчистить без поломки итератора. Плюс erase для просто итератора (без *)
-            // так же работает и за O(1), а не logN, как убирать пошагово
-            it = (*global_set[number]).begin();
+            ++it;
         }
+        delete global_set[number];
+        global_set[number] = new std::set <long long>;
+
     }
+
     void prtNum( long long size , long long value ) {
         if ( array[value].empty() ) {
             std::cout << "-1";
@@ -54,6 +57,11 @@ public:
                 std::cout << *it << ' ';
             }
             std::cout << '\n';
+        }
+    }
+    ~SetOfSet() {
+        for (long long i = 0; i < lot_lot + 1; ++i) {
+            delete global_set[i];
         }
     }
 };
@@ -91,4 +99,3 @@ int main() {
     }
     return 0;
 }
-
