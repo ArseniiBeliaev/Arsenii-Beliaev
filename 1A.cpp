@@ -2,6 +2,7 @@
 #include <string>
 using namespace std;
 
+
 typedef long long ll;
 
 struct node {
