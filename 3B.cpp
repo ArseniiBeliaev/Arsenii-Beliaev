@@ -24,6 +24,7 @@ struct Node {
     }
 };
 
+
 class splayTree {
     Node *root = nullptr;
 
