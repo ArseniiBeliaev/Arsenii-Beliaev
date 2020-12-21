@@ -1,10 +1,9 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+
 const long long INF  = 1e18;
 const long N = 99999;
-
-
 
 class cutTree {
     long long array[400000];
@@ -70,8 +69,9 @@ public:
 
 
 int main() {
-    long long ch[100000];
-    long long nch[100000];
+    long long ch[100'000];
+    long long nch[100'000];
+    
     long long n;
     std::cin >> n;
     long long value;
@@ -90,6 +90,7 @@ int main() {
     cutTree Snch;
     Sch.create(ch,n-1);
     Snch.create(nch,n-1);
+    
     long long req;
     std::cin >> req;
     int cmd1;
