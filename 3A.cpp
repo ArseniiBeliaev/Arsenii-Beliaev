@@ -21,6 +21,7 @@ struct Node {
     }
 };
 
+
 class BiBaTree {
     Node* root = NULL ;
 
