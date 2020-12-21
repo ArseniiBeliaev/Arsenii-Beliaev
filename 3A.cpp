@@ -7,12 +7,12 @@ void acceleeration() {
     std::cout.tie(0);
 }
 
-struct Node {// По хорошему данной структурой не будут пользоваться с наружи, так что её следовало бы спрятать под 'капотом' BiBaTree
+struct Node {
     Node* left;
     Node* right;
     long long key;
     long long height;
-    
+
     Node ( long long x ) {
         key = x;
         left = NULL;
@@ -23,10 +23,11 @@ struct Node {// По хорошему данной структурой не б�
 
 class BiBaTree {
     Node* root = NULL ;
- 
+
     long long fixHeight(Node* node) {
         //Не очень эффективно делать 4 проверки с повторяющимися условиями. Можно просто взять левую высоту или 0, а потом максимум с правой или так оставить
         // А в конце уже добавить 1, хотя не очень понял, почему пустая ветка вдруг имеет высоту 1 а не 0
+        // Здесб обращение к несущ элементам губит всю малину
         if (( node->right == NULL ) && ( node->left == NULL )) {
             return 1;
         }
@@ -40,7 +41,7 @@ class BiBaTree {
             return std::max( (node->left)->height,(node->right)->height ) + 1;
         }
     }
-    
+
     Node* rotationRight(Node* node) {// rotate right
         Node* swp = node->left;
         node->left = swp->right;
@@ -49,7 +50,7 @@ class BiBaTree {
         swp->height = fixHeight(swp);
         return swp;
     }
-    
+
     Node* rotationLeft(Node* node) {// rotate left
         Node* swp = node->right;
         node->right = swp->left;
@@ -58,7 +59,7 @@ class BiBaTree {
         swp->height = fixHeight(swp);
         return swp;
     }
-    
+
     Node* min(Node* node) {
         if (node->left != NULL ) {
             min(node->left);
@@ -67,18 +68,23 @@ class BiBaTree {
             return node;
         }
     }
-    
+
     Node* delMin(Node* node) {
         if ( node->left == NULL ) {
-            return node->right;
+            Node* kick = node->right;
+            delete node;
+            return kick;
         }
         else {
+            //Node* kick = node->left;
             node->left =  delMin(node->left);
+           // delete kick;
             //здесь утечка памяти, тебе нужно явно удалить созданую когда-то ноду, которая раньше хранилась в left при возврате right
+            // Попроавил
         }
         return balance(node);
     }
-    
+
     long long balanceDiff (Node* node) {//Аналогично
         long long  rez;
         if (( node->left == NULL ) && (node->right == NULL )) {
@@ -95,7 +101,7 @@ class BiBaTree {
         }
         return rez;
     }
-    
+
     Node* balance(Node* node) {
         node->height = fixHeight(node);
         long long diff = balanceDiff(node);
@@ -113,9 +119,9 @@ class BiBaTree {
         }
         return node;
     }
-    
+
     Node* insert(long  long value , Node* node) {
- 
+
         if ( node == NULL ) {
             node = new Node(value);
             return node;
@@ -131,7 +137,7 @@ class BiBaTree {
         // Комментарий))??? Вау
         return balance(node); // здесь вызовем баланс дерево , чтобы все было
     }
-    
+
     Node* del(long long value , Node* node ) {
         if ( node!=NULL ) {
             if (value > node->key ) {
@@ -148,7 +154,7 @@ class BiBaTree {
                     return l;
                 }
                 Node* swp = min(r);
- 
+
                 swp->right = delMin(r);
                 swp->left = l;
                 return balance(swp);
@@ -159,14 +165,14 @@ class BiBaTree {
         }
         return balance(node);
     }
-    
+
     void print(Node* node) {
         if (node != NULL ) {
             print(node->left);
             std::cout << node->key << " [" << node->height << "] " << " ";
             print(node->right);
         }
- 
+
     }
     void  downL (Node* node , long long value ) {
         if (node != NULL ) {
@@ -218,7 +224,7 @@ public:
         root = del(x,root);
     }
     void prt() {
-       print(root);
+        print(root);
     }
     void nxt(long long x) {
         long long rez = next(x+1,root);
@@ -231,10 +237,10 @@ public:
         else std::cout << rez << '\n';
     }
     void ex(long long x) {
-         std::cout << (exists(x,root)? "true":"false") << '\n';
+        std::cout << (exists(x,root)? "true":"false") << '\n';
     }
 };
- 
+
 int main() {
     acceleeration();
     BiBaTree tree;
@@ -262,6 +268,7 @@ int main() {
             tree.prv(value);
         }
     }
- 
+
     return 0;
 }
+
