@@ -32,21 +32,22 @@ const int if_nine = 9;
 
 class BigInteger {
 public:
+    // А где конструктор копирования?
     // Конструктор, Присваивание, toString
     BigInteger();
-    BigInteger(const long long& value);
+    BigInteger(const long long& value);// Простые объекты (малого веса) по типу value можно передавать напрямую, копированием, что чуть упрощает работу
     BigInteger(const std::string& value);
     BigInteger& operator=(const long long& value);
-    std::string toString() const;
+    std::string toString() const;// Эм, а почему каст объявлен среди конструкторов??
     BigInteger& operator=(const BigInteger& value);
 
 
     // Унарные операторы
     BigInteger& operator++();
-    const BigInteger operator++(int);
+    const BigInteger operator++(int);// Он должен возвращать обычную копию, не const
     BigInteger& operator--();
-    const BigInteger operator--(int);
-    const BigInteger operator-();
+    const BigInteger operator--(int);// Аналогично
+    const BigInteger operator-();// Аналогично
 
 
     // Булевы операторы
@@ -68,6 +69,8 @@ public:
 
 
     // Арифмитические операции 2.0
+    // Абидно, так то += круче считается, а это так, приятный доп
+    // А почему они friend? Поправь
     friend BigInteger operator+(const BigInteger& left, const BigInteger& right);
     friend BigInteger operator-(const BigInteger& left, const BigInteger& right);
     friend BigInteger operator*(const BigInteger& left, const BigInteger& right);
@@ -90,19 +93,20 @@ public:
     }
 
     // Узнать знак
-    int getSign() {
+    int getSign() {// if a<0 ... 
         return sign;
     }
 private:
     std::vector <unsigned int> number;
     int sign = 0;
     // Дополнительные функции
+    // Было бы круто получить побольше комментариев по поводу данных функций
     void createMas(const std::vector <unsigned int>& high, const std::vector <unsigned int>& low, std::vector <unsigned int>& answer);
     void createMas(const std::vector <unsigned int>& high, const std::vector <unsigned int>& low, std::vector <long long>& answer);
     void fix_sum(std::vector <unsigned int>& answer);
     void fix_sum(std::vector <long long>& answer);
     bool CheckMas(const std::vector <unsigned int>& first, const std::vector <unsigned int>& second);
-    void Simple() {
+    void Simple() { //особенно эта
 
     }
 };
@@ -122,6 +126,7 @@ private:
 // Конструктор, Присваивание, toString
 BigInteger::BigInteger() {
     sign=0;
+    // Здесь было бы хорошо добавить один нулевой элемент, так как пустая инициализация это создание элемента = 0
 }
 
 BigInteger::BigInteger(const long long& value) {
@@ -164,7 +169,7 @@ BigInteger::BigInteger(const std::string& value) {
 
     if (value[0]=='0') {
         sign=0;
-        number.push_back(value[i]-'0');
+        number.push_back(value[i]-'0');// push_back (0)
         i=1;
     }
 
@@ -173,7 +178,8 @@ BigInteger::BigInteger(const std::string& value) {
     }
 
 }
-
+// Зачем копипаста? У тебя по факту есть конструктор из long long и оператор присваивания для BigInt,
+// Откуда, через приведение типов, данная функция и заработает
 BigInteger& BigInteger::operator=(const long long& value) {
     number.clear();
     if (value == 0) {
@@ -213,7 +219,7 @@ std::string BigInteger::toString() const {
     return answer;
 }
 
-BigInteger & BigInteger::operator=(const BigInteger &value) {
+BigInteger& BigInteger::operator=(const BigInteger &value) {
     number=value.number;
     sign=value.sign;
     return (*this);
@@ -315,7 +321,7 @@ BigInteger & BigInteger::operator+=(const BigInteger &value) {
 
     if (this->sign == value.sign) {
         if ((this->number).size() >= value.number.size()) {
-            std::vector <unsigned int> answer;
+            std::vector <unsigned int> answer;// создание временных массивов для += запрещено, в этом вся фишка, иначе нет смысла в его скорости
             createMas((*this).number,value.number,answer);
             fix_sum(answer);
             (*this).number=answer;
@@ -332,7 +338,7 @@ BigInteger & BigInteger::operator+=(const BigInteger &value) {
     }
 
     else {
-        BigInteger c_value=value;
+        BigInteger c_value=value;// Тут особенно
         c_value.sign=c_value.sign*(-1);
         (*this)-=c_value;
         return (*this);
@@ -510,6 +516,7 @@ BigInteger & BigInteger::operator%=(const BigInteger &value) {
     return *this;
 }
 // Арифмитические операции 2.0
+// А для чего тогда friend?
 BigInteger operator+(const BigInteger& left, const BigInteger& right) {
     BigInteger answer = left;
     return (answer+=right);
@@ -551,7 +558,7 @@ std::istream& operator>>(std::istream& in, BigInteger& value) {
 
 // Дополнительные функции
 
-void BigInteger::createMas(const std::vector<unsigned int> &high, const std::vector<unsigned int> &low,std::vector<unsigned int> &answer) {
+void BigInteger::createMas(const std::vector<unsigned int> &high, const std::vector<unsigned int> &low, std::vector<unsigned int> &answer) {
     size_t size_h = high.size();
     answer.push_back(0);
     for (size_t i=0; i < size_h; ++i) {
@@ -566,8 +573,8 @@ void BigInteger::createMas(const std::vector<unsigned int> &high, const std::vec
         lo--;
     }
 }
-
-void BigInteger::createMas(const std::vector<unsigned int> &high, const std::vector<unsigned int> &low,std::vector<long long> &answer) {
+// Даже боюсь спросить что они делают
+void BigInteger::createMas(const std::vector<unsigned int> &high, const std::vector<unsigned int> &low, std::vector<long long> &answer) {
 
     for (size_t i=0; i < high.size(); ++i) {
         answer.push_back(high[i]);
@@ -583,7 +590,8 @@ void BigInteger::createMas(const std::vector<unsigned int> &high, const std::vec
         lo--;
     }
 }
-
+// Создавать 2 функции с одинаковым названием и семантикой (описанием ввода) за исключением int/long и делать их совершенно разными оч плохо
+// По крайне мере читаемости я тут явно не увидел
 void BigInteger::fix_sum(std::vector<unsigned int>& answer) {
     long long j = (long long)answer.size() - 1;
     for (; j>0; --j) {
@@ -667,7 +675,7 @@ public:
     Rational& operator/=(const Rational& value);
 
     // Арифмитические операции 2.0
-
+    // Friend нужно убрать, не нужон он тут
     friend Rational operator+(const Rational& left, const Rational& right);
     friend Rational operator-(const Rational& left, const Rational& right);
     friend Rational operator*(const Rational& left, const Rational& right);
@@ -739,14 +747,14 @@ private:
 // Конструктор
 Rational::Rational(const BigInteger& value) {
     a = value;
-    sign = a.getSign();
+    sign = a.getSign();// if (a < 0) a*=-1
     a.toABS();
     b = 1;
 }
 
 Rational::Rational(const long long &value) {
     a = value;
-    sign = a.getSign();
+    sign = a.getSign();// Аналогично
     a.toABS();
     b = 1;
 }
@@ -771,6 +779,8 @@ Rational & Rational::operator=(const double &value) {
 Rational& Rational::operator=(const long long &value) {
     if (value == 0) {
         sign = 0;
+        // a=0;
+        // b=1; Иначе при умножении на этот rational может случиться печаль
         //return *this;
     }
 
@@ -795,7 +805,7 @@ Rational& Rational::operator=(const long long &value) {
 bool Rational::operator==(const Rational &value) {
     //std::cerr << " " << *this << " TUT == " << value << " " ;
     if (sign == 0 && value.sign == 0 ) return true;
-    Rational copy_value = value;
+    Rational copy_value = value;// Это ещё что, зачем? У тебя должен быть гарант, что поступающий Rational уже пофикшен, иначе как его оператива держит то
     copy_value.fix();
     if (sign == copy_value.sign && a == copy_value.a && b == copy_value.b) {
         return true;
@@ -855,7 +865,7 @@ Rational & Rational::operator++() {
 
 Rational  Rational::operator++(int) {
     Rational answer = *this;
-    answer+=1;
+    answer+=1;// Не правильно, должен изменяться не answer, a this, так как ты должен вернуть копию со старым значением
     return answer;
 }
 
@@ -866,7 +876,7 @@ Rational & Rational::operator--() {
 
 Rational  Rational::operator--(int) {
     Rational answer = *this;
-    answer-=1;
+    answer-=1;// Аналогично
     return answer;
 }
 
@@ -891,7 +901,7 @@ Rational & Rational::operator+=(const Rational &value) {
 }
 
 Rational & Rational::operator-=(const Rational &value) {
-    Rational copy_value = value;
+    Rational copy_value = value;// Это зачем? Во первых - и так создаст копию, а во вторых 2 копирования в -= не есть приемлемо
     *this+=(-copy_value);
     return *this;
 }
