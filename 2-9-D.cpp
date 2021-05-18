@@ -46,7 +46,7 @@ int main() {
         check_dfs.push_back(false);
     }
 
-    for (int i = 0; i < number_nodes + 1; ++i) {
+    for (int i = 0; i < number_nodes + 1; ++i) { //лучше вынести в отдельную функцию
         for (int j = 0; j < number_edges; ++j ) {
             if (answer[data[j].from] < INF) {
                 if (answer[data[j].to] > answer[data[j].from] + data[j].dist ) {
