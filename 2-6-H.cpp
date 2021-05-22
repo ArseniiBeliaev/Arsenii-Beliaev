@@ -1,25 +1,26 @@
 #include <iostream>
 
 int main() {
-    long long  size_1;
+    long long size_1;
     long long size_2;
     std::cin >> size_1;
     std::cin >> size_2;
+    
     long long array_1[size_1];
     long long array_2[size_2];
     long long array_small[std::min(size_2,size_1)+1];
     for (long long i =0; i < std::min(size_2,size_1)+1; ++i) {
         array_small[i] = -1;
     }
+    
     for (long long i = 0; i < size_1; ++i) {
         std::cin >> array_1[i];
     }
-
     for (long long i = 0; i < size_2; ++i) {
         std::cin >> array_2[i];
     }
 
-    long long dp[size_1+1][size_2+1];
+    long long dp[size_1+1][size_2+1];// Аналогично, можно вынести и сделать всё более читаемо
     for (long long i = 0; i < size_1 + 1; ++i) {
         for (long long j = 0; j < size_2 + 1; ++j) {
             dp[i][j] = 0;
