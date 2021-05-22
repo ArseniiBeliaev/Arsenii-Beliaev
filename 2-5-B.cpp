@@ -14,7 +14,7 @@ void swap(long long key_1, long long key_2);
 
 private:
 
-std::list <std::pair <long long, long long>> array[100000];
+std::list <std::pair <long long, long long>> array[100000];// Можно было в 10-50 раз больше взять, память позволяет
 
 unsigned long long getHash(const int& key);
 
@@ -27,7 +27,7 @@ unsigned long long HashTable::getHash(const int &key) {
     unsigned long long hash = 0;
     long long i = 1;
     while (copy_key != 0 ) {
-        hash += (long long)pow(x,i) *  ( copy_key % 10 );
+        hash += (long long)pow(x,i) *  ( copy_key % 10 );// Уже лучше
         ++i;
         hash%=mod;
         copy_key/=10;
