@@ -34,7 +34,7 @@ struct Matrix {
         return *this;
     }
 
-    friend Matrix operator*(const Matrix& left, const Matrix& right);
+    friend Matrix operator*(const Matrix& left, const Matrix& right);// Friend для структуры.....
     friend Matrix operator%(const Matrix& left, const long long& right);
 
 
