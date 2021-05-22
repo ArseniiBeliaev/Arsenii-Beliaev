@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iterator>
 #include <list>
+
 class HashTable {
 public:
     void toChange(std::pair <std::string, std::string>& value);
@@ -49,7 +50,8 @@ void HashTable::toChange(std::pair<std::string, std::string> &value) {
     }
 }
 
-void HashTable::get(std::string key) {
+void HashTable::get(std::string key) {// Корректнее было бы сделать функцию get, которая возвращает ссылку на элемент, а на её основе уже toChange, print и remove
+    // А так получается копирование кода
     unsigned long long hash = getHash(key);
     bool Indicator_in = false;
     for (auto element = array[hash].begin(); element != array[hash].end(); ++element) {
