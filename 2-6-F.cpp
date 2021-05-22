@@ -16,7 +16,7 @@ int main() {
     }
  
  
-    int array_ans[size1 + 1][size2 + 1];
+    int array_ans[size1 + 1][size2 + 1];// Следующие 2 блока кода можно было бы и вынести в отдельную функцию из main
     for (int i = 0; i < size1 + 1; ++i) {
         for (int j = 0; j < size2 + 1; ++j) {
             array_ans[i][j] = 0;
