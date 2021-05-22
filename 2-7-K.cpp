@@ -27,7 +27,7 @@ int main() {
     std::cin >> m >> n;
     if (n > m) std::swap(m,n);
     long long ma = ( 1 << n);
-    long long dp[ma][m];
+    long long dp[ma][m];// В данном случае у тебя зависимость только между двумя соседними столбцами и можно было обойтись только массивом на 2 строки
     for (int i = 0; i < ma; ++i) {
         for (int j = 0; j < m; ++j) {
             dp[i][j] = 0;
