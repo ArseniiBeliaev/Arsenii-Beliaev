@@ -3,9 +3,7 @@
 #include <map>
 #include <set>
 
-
-
-
+// Хмм, помучить тебя выделением в отдельные функции до хора???
 typedef  long long ll;
 int main() {
     ll INF = 10e8;
@@ -28,7 +26,7 @@ int main() {
         answer.push_back(INF);
         v_distancec.push_back(INF);
     }
-
+//------------------------------------------------------------------------------------
     for (ll i = 1; i < number_nodes + 1; ++i) {
         if (i == begin) {
             //distance[i] = 0; // map
