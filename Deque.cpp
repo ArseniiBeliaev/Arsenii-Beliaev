@@ -148,7 +148,7 @@ public:
         return const_iterator (deque + back.first, &deque[back.first][back.second], block_size, back.second);
     }
 
-    const_iterator cbegin() const {
+    const_iterator cbegin() const {// Можно было просто от обычного итератора сконструироваться и не копировать
         size_t index_first = front.first + (front.second + 1) / block_size;
         size_t index_second = (front.second + 1) % block_size;
         return const_iterator (deque + index_first, &deque[index_first][index_second], block_size, index_second);
@@ -232,7 +232,7 @@ public:
                     ind_y = 0;
                 }
             }
-        } catch (...) {
+        } catch (...) {// А где уничтожение всех созданных объектов то?
             throw;
         }
     }
@@ -309,6 +309,7 @@ public:
             back.first--;
         }
         my_size--;
+        // Старый объект всё же стоит уничтожить, просто стереть его из памяти может быть не достаточно
     }
     void pop_front() {
         front.second++;
@@ -317,6 +318,7 @@ public:
             front.first++;
         }
         my_size--;
+        // Аналогично
     }
     void print() {
         std::cout << "Begin " << front.first << " " << front.second << '\n';
@@ -361,7 +363,7 @@ private:
         size_t new_blocks_number = blocks_number * 2;
         if (new_blocks_number == 0) new_blocks_number = 1;
         Object **new_deque = new Object *[new_blocks_number];
-        for (size_t i = 0; i < new_blocks_number; ++i) {
+        for (size_t i = 0; i < new_blocks_number; ++i) {// А зачем все выделять, можно выделить половину, а остальные доприсваивать
             new_deque[i] = reinterpret_cast<Object *>(new int8_t[block_size * sizeof(Object)]);
         }
 
@@ -370,7 +372,7 @@ private:
         Object **old_deque = deque;
         //delete [] deque;
         for (size_t i = 0; i < blocks_number; ++i) {
-            new_deque[new_index] = old_deque[i];
+            new_deque[new_index] = old_deque[i];// А вот тут по факту утечка памяти, так как ты выделил некоторые блоки в новом массиве, и они так и будут висеть
             new_index++;
         }
 
