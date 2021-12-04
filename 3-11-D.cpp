@@ -6,8 +6,8 @@
 #include <functional>
 #include <array>
 
-
-
+// Нужно было реализовать используя бор - работает за О(длина текста), а  std::sort - за klogk * (длина самого длинного слова), k - число слов 
+// Лучше разнести по отдельным функциям
 int main() {
     std::string str;
     std::vector <std::string> words; 
