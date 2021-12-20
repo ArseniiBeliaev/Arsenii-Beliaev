@@ -1,62 +1,111 @@
 #include <iostream>
-#include <string>
 #include <vector>
 #include <map>
-#include <algorithm>
-#include <functional>
-#include <array>
-
-// Нужно было реализовать используя бор - работает за О(длина текста), а  std::sort - за klogk * (длина самого длинного слова), k - число слов 
-// Лучше разнести по отдельным функциям
+#include <string>
+ 
+class Bor {
+  static const int alphabet = 26;
+  struct node {
+    int to[alphabet];
+    int term;
+    node() {
+      for (int i = 0; i < alphabet; ++i) {
+        to[i] = -1;
+      }
+      term = 0;
+    }
+  };
+  std::vector<node> trie;
+ 
+ public:
+  Bor() {
+    trie.push_back(node());
+  }
+ 
+  void add(const std::string &s) {
+    int v = 0;
+    for (size_t i = 0; i < s.size(); ++i) {
+      if (trie[v].to[s[i] - 'a'] == -1) {
+        trie.push_back(node());
+        trie[v].to[s[i] - 'a'] = trie.size() - 1;
+      }
+      v = trie[v].to[s[i] - 'a'];
+    }
+    ++trie[v].term;
+  }
+ 
+  void dfs(int v, std::vector<std::string> &sorted, std::string &s) {
+    for (int i = 0; i < alphabet; ++i) {
+      if (trie[v].to[i] != -1) {
+        s += char('a' + i);
+        if (trie[trie[v].to[i]].term > 0) {
+          for (int j = 0; j < trie[trie[v].to[i]].term; ++j) {
+            sorted.push_back(s);
+          }
+        }
+        dfs(trie[v].to[i], sorted, s);
+        s.pop_back();
+      }
+    }
+  }
+  std::vector<std::string> sort(const std::vector<std::string> &dict) {
+    for (const auto &i : dict) {
+      add(i);
+    }
+    std::vector<std::string> sorted;
+    std::string s = "";
+    dfs(0, sorted, s);
+    return sorted;
+  }
+};
+ 
 int main() {
-    std::string str;
-    std::vector <std::string> words; 
-    std::vector <std::string> points; 
-    bool first_point = false;
-    std::string point;
-    std::string word;
-    std::cin >> str;
-    if (str[0] == '.') {
-        first_point = true;
+  std::string s;
+  std::cin >> s;
+  std::vector<int> str;
+  std::vector<std::string> dict;
+  std::string t = "";
+  for (size_t i = 0; i < s.size(); ++i) {
+    if (i == 0) {
+      str.push_back(0);
+      if (s[i] == '.') {
+        ++str[str.size() - 1];
+      } else {
+        t += s[i];
+      }
+    } else {
+      if (s[i] == '.') {
+        if (s[i - 1] != '.') {
+          str.push_back(0);
+          if (t != "") {
+            dict.push_back(t);
+            t = "";
+          }
+        }
+        ++str[str.size() - 1];
+      } else {
+        str.push_back(0);
+        t += s[i];
+      }
     }
-    for (int i = 0; i < str.size();) {
-        while (i < str.size() && str[i] == '.')
-        {
-            point += '.';
-            ++i;
-        }
-        if (point.size()) {
-            points.push_back(point);
-        }
-        point.clear();
-        while ( i < str.size() && str[i] != '.')
-        {
-            word += str[i];
-            ++i;
-        }
-        if (word.size()) {
-            words.push_back(word);
-        }
-        word.clear();
-    }  
-
-    std::sort(words.begin(),words.end());
-    int i = 0;
-    int j = 0; 
-    while (i != words.size() || j != points.size()) {
-        if (first_point) {
-            std::cout << points[j];
-            first_point = false;
-            ++j;
-        }
-        if (i < words.size()) {
-            std::cout << words[i];
-            ++i;
-        }
-        if (j < points.size()) {
-            std::cout << points[j];
-            ++j;
-        }
+  }
+  if (t != "") {
+    dict.push_back(t);
+  }
+  Bor bor;
+  std::vector<std::string> sorted = bor.sort(dict);
+  std::string ans = "";
+  int count = 0;
+  for (int i = 0; i < s.size(); ++i) {
+    if (s[i] == '.') {
+      ans += '.';
+    } else {
+      if (i == 0 || s[i - 1] == '.') {
+        ans += sorted[count];
+        ++count;
+      }
     }
-    return 0;   
+  }
+  std::cout << ans;
+  return 0;
 }
